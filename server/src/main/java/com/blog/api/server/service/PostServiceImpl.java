@@ -6,6 +6,7 @@ import com.blog.api.server.model.PostDTO;
 import com.blog.api.server.repository.PostRepository;
 import com.blog.api.server.utils.MongoUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
