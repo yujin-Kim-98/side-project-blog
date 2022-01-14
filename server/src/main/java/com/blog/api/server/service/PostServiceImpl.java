@@ -48,7 +48,6 @@ public class PostServiceImpl implements PostService {
         return PostDTO.builder()
                 .posts(posts.getContent())
                 .count(posts.getTotalElements())
-                .hasNext(posts.hasNext())
                 .page(posts.getPageable().getPageNumber())
                 .size(posts.getSize())
                 .build();

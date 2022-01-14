@@ -25,7 +25,6 @@ const postReducer = (state = initialState, action) => {
             return {
                 ...state,
                 items: action.payload.posts,
-                hasNext: action.payload.hasNext,
                 page: action.payload.page + 1,
                 count: action.payload.count,
                 size: action.payload.size,

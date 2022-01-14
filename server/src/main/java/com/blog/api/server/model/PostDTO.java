@@ -17,9 +17,6 @@ public class PostDTO {
     @ApiModelProperty(value = "ALL COUNT")
     private Long count;
 
-    @ApiModelProperty(value = "NEXT PAGE")
-    private boolean hasNext;
-
     @ApiModelProperty(value = "PAGING PAGE")
     private int page;
 
@@ -27,10 +24,9 @@ public class PostDTO {
     private int size;
 
     @Builder
-    public PostDTO(List<Post> posts, Long count, boolean hasNext, int page, int size) {
+    public PostDTO(List<Post> posts, Long count, int page, int size) {
         this.posts = posts;
         this.count = count;
-        this.hasNext = hasNext;
         this.page = page;
         this.size = size;
     }
