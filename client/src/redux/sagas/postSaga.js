@@ -3,20 +3,18 @@ import axios from "axios";
 import { POST_SAVE_FAILURE, POST_SAVE_REQUEST, POST_SAVE_SUCCESS, POST_GET_ALL_REQUEST, POST_GET_ALL_SUCCESS, POST_GET_ALL_FAILURE } from "../types";
 
 // GET POST ALL
-const postGetAllAPI = () => {
+const postGetAllAPI = (req) => {
     const config = {
         headers: {
             "Content-Type" : "application/json",
         }
     };
-    return axios.get("/api/post", config);
+    return axios.get("/api/post", { params: req }, config);
 };
 
-function* postGetAll() {
+function* postGetAll(action) {
     try {
-        const result = yield call(postGetAllAPI);
-
-        console.log(result, "post get all result");
+        const result = yield call(postGetAllAPI, action.payload);
 
         yield put({
             type: POST_GET_ALL_SUCCESS,

@@ -34,7 +34,6 @@ public class PostController {
     @ApiModelProperty(value = "GET", notes = "메인 화면 게시물 리스트")
     @GetMapping
     public ResponseEntity<ResponseVO> getPostAll(@PageableDefault(size = 5, sort = "created", direction = Sort.Direction.DESC) Pageable pageable) {
-        // return : 게시물 총 개수, post 리스트 5개
         PostDTO postDTO = postService.getPostAll(pageable);
 
         return ResponseEntity

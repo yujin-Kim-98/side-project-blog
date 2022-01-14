@@ -43,14 +43,14 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO getPostAll(Pageable pageable) {
-        Long count = postRepository.count();
         Page<Post> posts = postRepository.findAll(pageable);
-        boolean hasPrevious = pageable.hasPrevious();
 
         return PostDTO.builder()
-                .posts(posts)
-                .count(count)
-                .hasPrevious(hasPrevious)
+                .posts(posts.getContent())
+                .count(posts.getTotalElements())
+                .hasNext(posts.hasNext())
+                .page(posts.getPageable().getPageNumber())
+                .size(posts.getSize())
                 .build();
     }
 }

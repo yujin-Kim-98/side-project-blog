@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Modal, ModalBody, ModalFooter, Button } from "reactstrap";
 import { CLEAR_ERROR_REQUEST } from "../redux/types";
 

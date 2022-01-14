@@ -8,8 +8,10 @@ const initialState = {
     created: null,
     isModal: false,
     errorMsg: "",
-    posts: [],
-    hasPrevious: false,
+    items: [],
+    page: 0,
+    count: 0,
+    size: 0,
 };
 
 const postReducer = (state = initialState, action) => {
@@ -17,13 +19,16 @@ const postReducer = (state = initialState, action) => {
         case POST_GET_ALL_REQUEST:
             return {
                 ...state,
+                page: action.payload.page,
             };
         case POST_GET_ALL_SUCCESS:
-            console.log(action.payload, "post get action payload");
             return {
                 ...state,
-                posts: action.payload.posts,
-                hasPrevious: action.payload.hasPrevious,
+                items: action.payload.posts,
+                hasNext: action.payload.hasNext,
+                page: action.payload.page + 1,
+                count: action.payload.count,
+                size: action.payload.size,
             }
         case POST_GET_ALL_FAILURE:
             return {
