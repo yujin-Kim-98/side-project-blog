@@ -5,7 +5,10 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     // Member
     NOT_FOUND_MEMBER(HttpStatus.BAD_REQUEST,"MEMBER-0001", "Member not found"),
-    EXISTING_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER-0002", "Member that already exists");
+    EXISTING_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER-0002", "Member that already exists"),
+
+    // Post
+    NOT_FOUND_POST(HttpStatus.BAD_REQUEST, "POST-0001", "Post not found");
 
     HttpStatus status;
     String code;

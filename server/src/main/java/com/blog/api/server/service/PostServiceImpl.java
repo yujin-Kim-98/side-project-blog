@@ -1,22 +1,19 @@
 package com.blog.api.server.service;
 
+import com.blog.api.server.common.ErrorCode;
 import com.blog.api.server.config.TokenProvider;
+import com.blog.api.server.handler.CustomException;
 import com.blog.api.server.model.Post;
 import com.blog.api.server.model.PostDTO;
 import com.blog.api.server.repository.PostRepository;
-import com.blog.api.server.utils.MongoUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -51,5 +48,16 @@ public class PostServiceImpl implements PostService {
                 .page(posts.getPageable().getPageNumber())
                 .size(posts.getSize())
                 .build();
+    }
+
+    @Override
+    public Post getPost(String id) {
+        Optional<Post> post = postRepository.findById(id);
+
+        post.orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_POST)
+        );
+
+        return post.get();
     }
 }

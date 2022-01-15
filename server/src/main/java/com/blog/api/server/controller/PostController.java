@@ -58,4 +58,17 @@ public class PostController {
                         .response(id)
                         .build());
     }
+
+    @ApiModelProperty(value = "GET", notes = "게시글 상세")
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseVO> getPost(@PathVariable String id) {
+        Post post = postService.getPost(id);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ResponseVO.builder()
+                        .status(HttpStatus.OK)
+                        .response(post)
+                        .build());
+    }
 }

@@ -1,5 +1,7 @@
 import React, { Fragment } from "react";
 import Pagination from "rc-pagination";
+import { Link } from "react-router-dom";
+import { CardBody, CardImg, CardText, CardTitle } from "reactstrap";
 
 const Paging = (props) => {
     const { items, total, current, size, nextPage } = props;
@@ -11,13 +13,21 @@ const Paging = (props) => {
                     { Array.isArray(items) ?
                     items.map((item) => 
                         <li className="section-item">
-                            <a className="img-thumb">
-                                <img src="sdgs"/>
-                            </a>
-                            <div className="wrap-content">
-                                <strong className="desc-title">{item.title}</strong>
-                                <p className="desc-content">{item.content}</p>
-                            </div>
+                            <Link to={`/post/${item.id}`}>
+                                <CardImg className="img-thumb"/>
+                                <CardBody className="wrap-content">
+                                    <CardTitle 
+                                        className="desc-title"
+                                    >
+                                        {item.title}
+                                    </CardTitle>
+                                    <CardText 
+                                        className="desc-content"
+                                    >
+                                        {item.content}
+                                    </CardText>
+                                </CardBody>
+                            </Link>
                         </li>
                     ) :
                     "" }

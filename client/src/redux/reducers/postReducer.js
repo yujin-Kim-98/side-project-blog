@@ -1,4 +1,4 @@
-import { POST_SAVE_FAILURE, POST_SAVE_REQUEST, POST_SAVE_SUCCESS, POST_GET_ALL_REQUEST, POST_GET_ALL_SUCCESS, POST_GET_ALL_FAILURE } from "../types";
+import { POST_SAVE_FAILURE, POST_SAVE_REQUEST, POST_SAVE_SUCCESS, POST_GET_ALL_REQUEST, POST_GET_ALL_SUCCESS, POST_GET_ALL_FAILURE, POST_GET_DETAIL_REQUEST, POST_GET_DETAIL_SUCCESS } from "../types";
 
 const initialState = {
     id: null,
@@ -25,7 +25,7 @@ const postReducer = (state = initialState, action) => {
             return {
                 ...state,
                 items: action.payload.posts,
-                page: action.payload.page + 1,
+                page: action.payload.page,
                 count: action.payload.count,
                 size: action.payload.size,
             }
@@ -47,6 +47,20 @@ const postReducer = (state = initialState, action) => {
             return {
                 isModal: true,
                 errorMsg: "",
+            };
+
+        case POST_GET_DETAIL_REQUEST:
+            return {
+                ...state,
+            };
+        case POST_GET_DETAIL_SUCCESS:
+            return {
+                ...state,
+                id: action.payload.id,
+                title: action.payload.title,
+                content: action.payload.content,
+                creator: action.payload.creator,
+                created: action.payload.created,
             };
         default:
             return state;

@@ -34,6 +34,10 @@ const NewPost = () => {
         setEditorState(editorState);
     };
 
+    const uploadCallback = () => {
+        console.log("gd");
+    };
+
     return (
         <Fragment>
             <section className="about">
@@ -66,14 +70,10 @@ const NewPost = () => {
                             editorClassName="editor"
                             onEditorStateChange={onEditorStateChange}
                             editorState={editorState}
+                            localization={{
+                                locale: 'ko',
+                            }}
                         >
-                            {/* <textarea
-                                // disabled
-                                value={draftToHtml(editorState)}
-                                // value={draftToHtml(convertToRaw(editorState.getC))}
-                                {...register("content", {})}
-                            >
-                            </textarea> */}
                         </Editor>
                     </FormGroup>
                     <FormGroup row>

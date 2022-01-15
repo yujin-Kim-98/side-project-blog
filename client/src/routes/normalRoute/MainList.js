@@ -39,7 +39,7 @@ const MainList = () => {
                         items={items}
                         total={count} 
                         size={size} 
-                        current={page} 
+                        current={page + 1} 
                         nextPage={nextPage}
                     />
                 </div>

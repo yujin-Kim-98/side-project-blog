@@ -1,14 +1,15 @@
 import { all, call, put, takeEvery, fork } from "@redux-saga/core/effects";
 import axios from "axios";
-import { POST_SAVE_FAILURE, POST_SAVE_REQUEST, POST_SAVE_SUCCESS, POST_GET_ALL_REQUEST, POST_GET_ALL_SUCCESS, POST_GET_ALL_FAILURE } from "../types";
+import { POST_SAVE_FAILURE, POST_SAVE_REQUEST, POST_SAVE_SUCCESS, POST_GET_ALL_REQUEST, POST_GET_ALL_SUCCESS, POST_GET_ALL_FAILURE, POST_GET_DETAIL_SUCCESS, POST_GET_DETAIL_FAILURE, POST_GET_DETAIL_REQUEST } from "../types";
+
+const config = {
+    headers: {
+        "Content-Type" : "application/json",
+    }
+};
 
 // GET POST ALL
 const postGetAllAPI = (req) => {
-    const config = {
-        headers: {
-            "Content-Type" : "application/json",
-        }
-    };
     return axios.get("/api/post", { params: req }, config);
 };
 
@@ -69,11 +70,39 @@ function* postSave(action) {
 
 function* watchPostSave() {
     yield takeEvery(POST_SAVE_REQUEST, postSave);
-}
+};
+
+// POST GET DETAIL
+const postGetAPI = (req) => {
+    return axios.get(`/api/post/${req}`, config);
+};
+
+function* postGet(action) {
+    try {
+        const result = yield call(postGetAPI, action.payload);
+
+        yield put({
+            type: POST_GET_DETAIL_SUCCESS,
+            payload: result.data.response,
+        });
+    } catch(e) {
+        console.error(e);
+
+        yield put({
+            type: POST_GET_DETAIL_FAILURE,
+            payload: e.response,
+        });
+    }
+};
+
+function* watchPostGet() {
+    yield takeEvery(POST_GET_DETAIL_REQUEST, postGet);
+};
 
 export default function* postSaga() {
     yield all([
         fork(watchPostSave),
         fork(watchPostGetAll),
+        fork(watchPostGet),
     ]);
-}
+};

@@ -1,24 +1,36 @@
-import React, {Fragment} from "react";
+import React, {Fragment, useEffect} from "react";
 import {Card, CardBody, CardTitle, CardText, Button} from "reactstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { POST_GET_DETAIL_REQUEST } from "../../redux/types";
 
-const PostDetail = () => {
+const PostDetail = (req) => {
+    const { id, title, content, creator, created } = useSelector((state) => state.post);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch({
+            type: POST_GET_DETAIL_REQUEST,
+            payload: req.match.params.id,
+        });
+    }, [dispatch]);
+
     return (
         <Fragment>
             <section className="about">
                 <div className="title en">
-                    <p>spring boot + react side project</p>
+                    <h1>{title}</h1>
                 </div>
                 <div>
                     <Card>
-                        <img
+                        {/* <img
                             alt="Card image cap"
                             src="https://picsum.photos/318/180"
                             width="100%"
-                        />
+                        /> */}
                         <CardBody>
                             <CardText>
-                                Some quick example text to build on the card title and make up the bulk of the card's
-                                content.
+                                {content}
                             </CardText>
                         </CardBody>
                     </Card>

@@ -22,7 +22,7 @@ const MyRouter = () => {
                             <Route exact path="/login" component={Login} />
                             <Route exact path="/signup" component={Signup} />
                             <Route exact path="/newpost" component={NewPost} />
-                            <Route exact path="/post-detail" component={PostDetail} />
+                            <Route exact path="/post/:id" component={PostDetail} />
                         </Switch>
                     </Container>
                     {/* 푸터 */}
