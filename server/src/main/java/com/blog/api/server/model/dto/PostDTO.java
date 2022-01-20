@@ -1,15 +1,28 @@
-package com.blog.api.server.model;
+package com.blog.api.server.model.dto;
 
+import com.blog.api.server.model.File;
+import com.blog.api.server.model.Post;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class PostDTO {
+
+    @ApiModelProperty(value = "POST TITLE")
+    private String title;
+
+    @ApiModelProperty(value = "POST CONTENT")
+    private String content;
+
+    @ApiModelProperty(value = "ADD FILE LIST")
+    private List<FileDTO> addFile;
 
     @ApiModelProperty(value = "POSTS")
     private List<Post> posts;

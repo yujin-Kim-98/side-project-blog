@@ -1,11 +1,12 @@
 package com.blog.api.server.service;
 
+import com.blog.api.server.model.Member;
 import com.blog.api.server.model.Post;
-import com.blog.api.server.model.PostDTO;
+import com.blog.api.server.model.dto.PostDTO;
 import org.springframework.data.domain.Pageable;
 
 public interface PostService {
-    String insertPost(Post post);
+    String insertPost(PostDTO postDTO, Member member);
 
     PostDTO getPostAll(Pageable pageable);
 

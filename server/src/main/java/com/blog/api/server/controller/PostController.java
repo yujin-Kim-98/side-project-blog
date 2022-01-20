@@ -3,7 +3,7 @@ package com.blog.api.server.controller;
 import com.blog.api.server.common.ResponseVO;
 import com.blog.api.server.model.Member;
 import com.blog.api.server.model.Post;
-import com.blog.api.server.model.PostDTO;
+import com.blog.api.server.model.dto.PostDTO;
 import com.blog.api.server.service.PostService;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.extern.slf4j.Slf4j;
@@ -13,15 +13,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -46,10 +39,8 @@ public class PostController {
 
     @ApiModelProperty(value = "POST", notes = "게시글 등록")
     @PostMapping
-    public ResponseEntity<ResponseVO> insertPost(@RequestBody Post post, @AuthenticationPrincipal Member member) {
-        post.setCreator(member.getEmail());
-
-        String id = postService.insertPost(post);
+    public ResponseEntity<ResponseVO> insertPost(@RequestBody PostDTO postDTO, @AuthenticationPrincipal Member member) {
+        String id = postService.insertPost(postDTO, member);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

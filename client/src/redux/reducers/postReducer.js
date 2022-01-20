@@ -1,7 +1,7 @@
 import { POST_SAVE_FAILURE, POST_SAVE_REQUEST, POST_SAVE_SUCCESS, POST_GET_ALL_REQUEST, POST_GET_ALL_SUCCESS, POST_GET_ALL_FAILURE, POST_GET_DETAIL_REQUEST, POST_GET_DETAIL_SUCCESS } from "../types";
 
 const initialState = {
-    id: null,
+    id: "",
     title: "",
     content: "",
     creator: "",
@@ -12,6 +12,7 @@ const initialState = {
     page: 0,
     count: 0,
     size: 0,
+    file: null,
 };
 
 const postReducer = (state = initialState, action) => {
@@ -40,6 +41,8 @@ const postReducer = (state = initialState, action) => {
             };
         case POST_SAVE_SUCCESS:
             return {
+                ...state,
+                id: action.payload,
                 isModal: false,
                 errorMsg: "",
             };

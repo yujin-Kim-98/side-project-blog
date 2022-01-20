@@ -1,5 +1,7 @@
 import { all, call, put, takeEvery, fork } from "@redux-saga/core/effects";
 import axios from "axios";
+import postReducer from "../reducers/postReducer";
+import { push } from "connected-react-router";
 import { POST_SAVE_FAILURE, POST_SAVE_REQUEST, POST_SAVE_SUCCESS, POST_GET_ALL_REQUEST, POST_GET_ALL_SUCCESS, POST_GET_ALL_FAILURE, POST_GET_DETAIL_SUCCESS, POST_GET_DETAIL_FAILURE, POST_GET_DETAIL_REQUEST } from "../types";
 
 const config = {
@@ -59,6 +61,8 @@ function* postSave(action) {
             type: POST_SAVE_SUCCESS,
             payload: result.data.response,
         });
+
+        yield put(push(`/post/${result.data.response}`));
     } catch(e) {
         console.error(e);
         yield put({
