@@ -22,7 +22,7 @@ public class PostDTO {
     private String content;
 
     @ApiModelProperty(value = "ADD FILE LIST")
-    private List<FileDTO> addFile;
+    private List<File> addFile;
 
     @ApiModelProperty(value = "POSTS")
     private List<Post> posts;

@@ -39,9 +39,14 @@ const NewPost = () => {
     };
 
     const fileOnChange = (e) => {
+        const file = {
+            data: e.target.files[0], 
+            fileType: "ATTACHMENT",
+        };
+
         dispatch({
             type: S3_UPLOAD_REQUEST,
-            payload: e.target.files[0],
+            payload: file,
         });
     };
 

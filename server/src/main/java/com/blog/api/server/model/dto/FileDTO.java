@@ -1,22 +1,16 @@
 package com.blog.api.server.model.dto;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class FileDTO {
 
-    private String originFileName;
+    private String fileType;
 
-    private String fileUrl;
-
-    @Builder
-    public FileDTO(String originFileName, String fileUrl) {
-        this.originFileName = originFileName;
-        this.fileUrl = fileUrl;
-    }
+    private MultipartFile file;
 }

@@ -23,7 +23,10 @@ const s3UploadAPI = (req) => {
 function* s3Upload(action) {
     try {
         const formData = new FormData();
-        formData.append("file", action.payload);
+        formData.append('file', action.payload.data);
+        formData.append('fileType', action.payload.fileType);
+
+        console.log(action.payload.fileType);
 
         const result = yield call(s3UploadAPI, formData);
 
@@ -31,6 +34,16 @@ function* s3Upload(action) {
             type: S3_UPLOAD_SUCCESS,
             payload: result.data.response,
         });
+
+        // const formData = new FormData();
+        // formData.append("multipartFile", action.payload);
+
+        // const result = yield call(s3UploadAPI, formData);
+
+        // yield put({
+        //     type: S3_UPLOAD_SUCCESS,
+        //     payload: result.data.response,
+        // });
     } catch(e) {
         console.error(e);
 

@@ -3,9 +3,11 @@ import { S3_UPLOAD_FAILURE, S3_UPLOAD_REQUEST, S3_UPLOAD_SUCCESS } from "../type
 const initialState = {
     id: "",
     parentId: "",
-    originFileName: "",
+    fileName: "",
     creator: "",
     created: null,
+    sortNum: 0,
+    fileType: "",
     addFile: [],
     isModal: false,
     errorMsg: "",
@@ -18,6 +20,7 @@ const fileReducer = (state = initialState, action) => {
                 ...state,
             };
         case S3_UPLOAD_SUCCESS:
+            console.log(...state.fileType, "fileType");
             return {
                 ...state,
                 addFile: [...state.addFile, action.payload],

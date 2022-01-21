@@ -7,9 +7,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,12 +35,16 @@ public class Post {
     @ApiModelProperty(required = true, value = "작성시간")
     private LocalDateTime created;
 
+//    @DBRef
+    private List<File> fileList;
+
     @Builder
-    public Post(String id, String title, String content, String creator, LocalDateTime created) {
+    public Post(String id, String title, String content, String creator, LocalDateTime created, List<File> fileList) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.creator = creator;
         this.created = created;
+        this.fileList = fileList;
     }
 }
