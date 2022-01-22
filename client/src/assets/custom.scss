@@ -1060,3 +1060,29 @@ border-radius: 2px !important;
     margin: 0 46px 0 0;
   }
 }
+
+.spinner-border {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  z-index: 1055;
+  width: 50px;
+  height: 50px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  outline: 0;
+}
+
+.spinner-backdrop {
+  opacity: .5;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000;
+}

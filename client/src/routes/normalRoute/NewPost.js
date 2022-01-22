@@ -1,20 +1,18 @@
-import React, { Fragment, useEffect, useState, useReducer } from "react";
-import { FormGroup, Form, Label, Col, Input, FormText, Button } from "reactstrap";
-import { Editor } from "react-draft-wysiwyg";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
+import React, { Fragment, useState } from "react";
+import { FormGroup, Form, Label, Col, Button } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { EditorState, convertToRaw } from "draft-js";
-import { POST_SAVE_REQUEST, S3_UPLOAD_REQUEST } from "../../redux/types";
-import fileSaga from "../../redux/sagas/fileSaga";
-import postReducer from "../../redux/reducers/postReducer";
+import { POST_SAVE_REQUEST } from "../../redux/types";
+import Attachment from "../../components/post/Attachment";
+import { Editor } from "react-draft-wysiwyg";
+import draftToHtml from 'draftjs-to-html';
+import ProgressBar from "../../components/ProgressBar";
 
 const NewPost = () => {
     const dispatch = useDispatch();
 
-    const { addFile } = useSelector((state) => state.file);
+    const { addFile, isUploadLoading } = useSelector((state) => state.file);
 
     const [ editorState, setEditorState ] = useState(EditorState.createEmpty());
 
@@ -38,23 +36,11 @@ const NewPost = () => {
         setEditorState(editorState);
     };
 
-    const fileOnChange = (e) => {
-        const file = {
-            data: e.target.files[0], 
-            fileType: "ATTACHMENT",
-        };
-
-        dispatch({
-            type: S3_UPLOAD_REQUEST,
-            payload: file,
-        });
-    };
-
     return (
         <Fragment>
             <section className="about">
                 <div className="title en">
-                    <p>New Post</p>
+                    <p>New Post{isUploadLoading}</p>
                 </div>
                 <Form
                     onSubmit={handleSubmit(onSubmit)}
@@ -88,21 +74,8 @@ const NewPost = () => {
                         >
                         </Editor>
                     </FormGroup>
-                    <FormGroup row>
-                        <Label
-                            for="exampleFile"
-                            sm={2}
-                        >
-                            File
-                        </Label>
-                        <Col sm={10}>
-                            <input
-                                className="form-control"
-                                type="file"
-                                onChange={fileOnChange}
-                            />
-                        </Col>
-                    </FormGroup>
+
+                    <Attachment />
 
                     <Button
                         color="success"
@@ -112,6 +85,7 @@ const NewPost = () => {
                         작성
                     </Button>
                 </Form>
+                {isUploadLoading ? <ProgressBar/> : null}
             </section>
         </Fragment>
     )

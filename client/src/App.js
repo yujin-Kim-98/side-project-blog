@@ -7,6 +7,7 @@ import history from "./utils/history";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/custom.scss";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 const App = () => {
     return (

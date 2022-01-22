@@ -11,6 +11,7 @@ const initialState = {
     addFile: [],
     isModal: false,
     errorMsg: "",
+    isUploadLoading: false,
 };
 
 const fileReducer = (state = initialState, action) => {
@@ -18,18 +19,20 @@ const fileReducer = (state = initialState, action) => {
         case S3_UPLOAD_REQUEST:
             return {
                 ...state,
+                isUploadLoading: true,
             };
         case S3_UPLOAD_SUCCESS:
-            console.log(...state.fileType, "fileType");
             return {
                 ...state,
                 addFile: [...state.addFile, action.payload],
+                isUploadLoading: false,
                 isModal: false,
                 errorMsg: "",
             };
         case S3_UPLOAD_FAILURE:
             return {
                 ...state,
+                isUploadLoading: false,
             };
 
         default:
