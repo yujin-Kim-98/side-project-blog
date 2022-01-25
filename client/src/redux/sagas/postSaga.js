@@ -2,7 +2,7 @@ import { all, call, put, takeEvery, fork } from "@redux-saga/core/effects";
 import axios from "axios";
 import postReducer from "../reducers/postReducer";
 import { push } from "connected-react-router";
-import { POST_SAVE_FAILURE, POST_SAVE_REQUEST, POST_SAVE_SUCCESS, POST_GET_ALL_REQUEST, POST_GET_ALL_SUCCESS, POST_GET_ALL_FAILURE, POST_GET_DETAIL_SUCCESS, POST_GET_DETAIL_FAILURE, POST_GET_DETAIL_REQUEST } from "../types";
+import { POST_SAVE_FAILURE, POST_SAVE_REQUEST, POST_SAVE_SUCCESS, POST_GET_ALL_REQUEST, POST_GET_ALL_SUCCESS, POST_GET_ALL_FAILURE, POST_GET_DETAIL_SUCCESS, POST_GET_DETAIL_FAILURE, POST_GET_DETAIL_REQUEST, POST_DELETE_SUCCESS, POST_DELETE_FAILURE, POST_DELETE_REQUEST } from "../types";
 
 const config = {
     headers: {
@@ -103,10 +103,45 @@ function* watchPostGet() {
     yield takeEvery(POST_GET_DETAIL_REQUEST, postGet);
 };
 
+// POST DELETE
+const postDeleteAPI = (req) => {
+    const token = localStorage.getItem("token");
+
+    if(token) {
+        config.headers["X-AUTH-TOKEN"] = token;
+    };
+
+    return axios.delete(`/api/post/${req}`, config);
+};
+
+function* postDelete(action) {
+    try {
+        yield call(postDeleteAPI, action.payload);
+
+        yield put({
+            type: POST_DELETE_SUCCESS,
+        });
+
+        yield put(push(`/`));
+    } catch(e) {
+        console.error(e);
+
+        yield put({
+            type: POST_DELETE_FAILURE,
+            payload: e.response,
+        });
+    }
+};
+
+function* watchPostDelete() {
+    yield takeEvery(POST_DELETE_REQUEST, postDelete);
+};
+
 export default function* postSaga() {
     yield all([
         fork(watchPostSave),
         fork(watchPostGetAll),
         fork(watchPostGet),
+        fork(watchPostDelete),
     ]);
 };

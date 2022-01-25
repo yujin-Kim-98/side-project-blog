@@ -19,6 +19,8 @@ const NewPost = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     const onSubmit = (data) => {
+        console.log(addFile, "add file list");
+
         const editorToHtml = draftToHtml(convertToRaw(editorState.getCurrentContent()));
 
         const { title, file } = data;
@@ -40,7 +42,7 @@ const NewPost = () => {
         <Fragment>
             <section className="about">
                 <div className="title en">
-                    <p>New Post{isUploadLoading}</p>
+                    <p>New Post</p>
                 </div>
                 <Form
                     onSubmit={handleSubmit(onSubmit)}

@@ -19,6 +19,9 @@ public class File {
     @ApiModelProperty(required = true, value = "File NAME")
     private String fileName;
 
+    @ApiModelProperty(required = true, value = "File Name (AWS)")
+    private String newFileName;
+
     @ApiModelProperty(required = true, value = "File URL")
     private String fileUrl;
 
@@ -36,8 +39,9 @@ public class File {
 
 
     @Builder
-    public File(String fileName, String fileUrl, String parentId, String fileType, int sortNum, LocalDateTime created) {
+    public File(String fileName, String newFileName, String fileUrl, String parentId, String fileType, int sortNum, LocalDateTime created) {
         this.fileName = fileName;
+        this.newFileName = newFileName;
         this.fileUrl = fileUrl;
         this.parentId = parentId;
         this.fileType = fileType;

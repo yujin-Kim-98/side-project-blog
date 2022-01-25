@@ -11,4 +11,6 @@ public interface PostService {
     PostDTO getPostAll(Pageable pageable);
 
     Post getPost(String id);
+
+    void deletePost(String id);
 }

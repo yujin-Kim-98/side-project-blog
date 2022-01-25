@@ -11,10 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import javax.xml.ws.Response;
 
 @Slf4j
 @RestController
@@ -60,6 +63,19 @@ public class PostController {
                 .body(ResponseVO.builder()
                         .status(HttpStatus.OK)
                         .response(post)
+                        .build());
+    }
+
+    @ApiModelProperty(value = "DELETE", notes = "게시글 삭제")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseVO> deletePost(@PathVariable String id) {
+        postService.deletePost(id);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ResponseVO.builder()
+                        .status(HttpStatus.OK)
+                        .response(null)
                         .build());
     }
 }

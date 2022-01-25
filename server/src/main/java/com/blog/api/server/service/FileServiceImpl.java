@@ -1,6 +1,7 @@
 package com.blog.api.server.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.blog.api.server.common.ErrorCode;
@@ -52,10 +53,16 @@ public class FileServiceImpl implements FileService {
 
         File file = File.builder()
                 .fileName(originFileName)
+                .newFileName(newFileName)
                 .fileUrl(amazonS3Client.getUrl(bucket, newFileName).toString())
                 .fileType(fileDTO.getFileType())
                 .build();
 
         return file;
+    }
+
+    @Override
+    public void deleteFile(String newFileName) {
+        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, newFileName));
     }
 }

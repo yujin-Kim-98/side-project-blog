@@ -1,4 +1,4 @@
-import { POST_SAVE_FAILURE, POST_SAVE_REQUEST, POST_SAVE_SUCCESS, POST_GET_ALL_REQUEST, POST_GET_ALL_SUCCESS, POST_GET_ALL_FAILURE, POST_GET_DETAIL_REQUEST, POST_GET_DETAIL_SUCCESS } from "../types";
+import { POST_SAVE_FAILURE, POST_SAVE_REQUEST, POST_SAVE_SUCCESS, POST_GET_ALL_REQUEST, POST_GET_ALL_SUCCESS, POST_GET_ALL_FAILURE, POST_GET_DETAIL_REQUEST, POST_GET_DETAIL_SUCCESS, POST_GET_DETAIL_FAILURE, POST_DELETE_REQUEST, POST_DELETE_SUCCESS, POST_DELETE_FAILURE } from "../types";
 
 const initialState = {
     id: "",
@@ -48,6 +48,7 @@ const postReducer = (state = initialState, action) => {
             };
         case POST_SAVE_FAILURE:
             return {
+                ...state,
                 isModal: true,
                 errorMsg: "",
             };
@@ -65,6 +66,24 @@ const postReducer = (state = initialState, action) => {
                 creator: action.payload.creator,
                 created: action.payload.created,
             };
+        case POST_GET_DETAIL_FAILURE:
+            return {
+                ...state,
+            };
+
+        case POST_DELETE_REQUEST:
+            return {
+                ...state,
+            };
+        case POST_DELETE_SUCCESS:
+            return {
+                ...state,
+            }
+        case POST_DELETE_FAILURE:
+            return {
+                ...state,
+            }
+
         default:
             return state;
     }

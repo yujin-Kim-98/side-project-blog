@@ -7,8 +7,7 @@ import { LOGOUT_REQUEST } from "../redux/types";
 const Header = () => {
     const dispatch = useDispatch();
 
-    const { isAuthenticated } = useSelector((state) => state.user);
-    const { role } = useSelector((state) => state.user);
+    const { isAuthenticated, role } = useSelector((state) => state.user);
 
     const logout = () => {
         dispatch({

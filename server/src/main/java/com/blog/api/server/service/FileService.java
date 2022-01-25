@@ -9,5 +9,5 @@ import java.util.List;
 public interface FileService {
     File s3Upload(FileDTO fileDTO);
 
-//    void insertFile(String parentId, List<FileDTO> addFile);
+    void deleteFile(String newFileName);
 }
