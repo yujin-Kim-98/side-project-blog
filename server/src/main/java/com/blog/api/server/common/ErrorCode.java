@@ -12,6 +12,7 @@ public enum ErrorCode {
 
     // File : AWS S3
     AWS_S3_UPLOAD_FAIL(HttpStatus.BAD_REQUEST, "FILE-S3-0001", "AWS S3 File upload fail"),
+    AWS_S3_UPLOAD_VALID(HttpStatus.BAD_REQUEST, "FILE-S3-0002", "File validation"),
 
     // Role
     NOT_HAVE_PERMISSION(HttpStatus.BAD_REQUEST, "ROLE-0001", "You do not have permission");

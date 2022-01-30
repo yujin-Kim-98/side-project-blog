@@ -60,12 +60,13 @@ const PostDetail = (req) => {
                         /> */}
                         <CardBody>
                             <CardText>
-                                {content}
+                                {/* <pre>{content}</pre> */}
+                                <div dangerouslySetInnerHTML={{__html: content}}></div>
                             </CardText>
                         </CardBody>
                     </Card>
-                </div>
                 { role === 'MASTER' && masterRoleBtn }
+                </div>
             </section>
         </Fragment>
     )

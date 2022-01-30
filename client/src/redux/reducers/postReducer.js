@@ -1,4 +1,4 @@
-import { POST_SAVE_FAILURE, POST_SAVE_REQUEST, POST_SAVE_SUCCESS, POST_GET_ALL_REQUEST, POST_GET_ALL_SUCCESS, POST_GET_ALL_FAILURE, POST_GET_DETAIL_REQUEST, POST_GET_DETAIL_SUCCESS, POST_GET_DETAIL_FAILURE, POST_DELETE_REQUEST, POST_DELETE_SUCCESS, POST_DELETE_FAILURE } from "../types";
+import { POST_SAVE_FAILURE, POST_SAVE_REQUEST, POST_SAVE_SUCCESS, POST_GET_ALL_REQUEST, POST_GET_ALL_SUCCESS, POST_GET_ALL_FAILURE, POST_GET_DETAIL_REQUEST, POST_GET_DETAIL_SUCCESS, POST_GET_DETAIL_FAILURE, POST_DELETE_REQUEST, POST_DELETE_SUCCESS, POST_DELETE_FAILURE, S3_UPLOAD_REQUEST, S3_UPLOAD_SUCCESS, S3_UPLOAD_FAILURE } from "../types";
 
 const initialState = {
     id: "",
@@ -12,7 +12,11 @@ const initialState = {
     page: 0,
     count: 0,
     size: 0,
-    file: null,
+    files: null,
+
+
+    // test
+    addFile: [],
 };
 
 const postReducer = (state = initialState, action) => {
@@ -83,6 +87,24 @@ const postReducer = (state = initialState, action) => {
             return {
                 ...state,
             }
+
+        // FILE UPLOAD
+        case S3_UPLOAD_REQUEST:
+            return {
+                ...state,
+            };
+        case S3_UPLOAD_SUCCESS:
+            return {
+                ...state,
+            };
+        case S3_UPLOAD_FAILURE:
+            return {
+                ...state,
+                isModal: true,
+                errorMsg: '에러 처리 필요',
+            };
+
+
 
         default:
             return state;

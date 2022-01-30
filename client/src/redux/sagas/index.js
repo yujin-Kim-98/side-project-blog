@@ -1,7 +1,6 @@
 import { all, fork } from '@redux-saga/core/effects';
 import axios from 'axios';
 import dotenv from 'dotenv';
-import fileSaga from './fileSaga';
 import postSaga from './postSaga';
 import userSaga from './userSaga';
 
@@ -13,6 +12,5 @@ export default function* rootSaga() {
     yield all([
         fork(userSaga),
         fork(postSaga),
-        fork(fileSaga),
     ]);
 };

@@ -5,8 +5,10 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.blog.api.server.common.ErrorCode;
+import com.blog.api.server.common.Role;
 import com.blog.api.server.handler.CustomException;
 import com.blog.api.server.model.File;
+import com.blog.api.server.model.Member;
 import com.blog.api.server.model.dto.FileDTO;
 import com.blog.api.server.repository.FileRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -26,39 +28,51 @@ public class FileServiceImpl implements FileService {
     @Autowired
     FileRepository fileRepository;
 
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
-
     @Autowired
     private AmazonS3Client amazonS3Client;
 
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+
+    @Value("${cloud.aws.cloudfront.domain}")
+    private String cloudFrontDomain;
+
+
 
     @Override
-    public File s3Upload(FileDTO fileDTO) {
+    public File s3Upload(FileDTO fileDTO, Member member) {
         MultipartFile multipartFile = fileDTO.getFile();
 
-        String originFileName = multipartFile.getOriginalFilename();
-        String newFileName = UUID.randomUUID() + "_" + originFileName;
+        if(!multipartFile.isEmpty()) {
+            if(member == null || !member.getRole().equalsIgnoreCase(Role.MASTER.getRole())) {
+                throw new CustomException(ErrorCode.NOT_HAVE_PERMISSION);
+            }
 
-        try(InputStream inputStream = multipartFile.getInputStream()) {
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType(multipartFile.getContentType());
-            metadata.setContentLength(multipartFile.getSize());
+            String originFileName = multipartFile.getOriginalFilename();
+            String newFileName = UUID.randomUUID() + "_" + originFileName;
 
-            amazonS3Client.putObject(new PutObjectRequest(bucket, newFileName, inputStream, metadata));
-        } catch (IOException e) {
-            log.error(e.getMessage());
-            throw new CustomException(ErrorCode.AWS_S3_UPLOAD_FAIL);
+            try(InputStream inputStream = multipartFile.getInputStream()) {
+                ObjectMetadata metadata = new ObjectMetadata();
+                metadata.setContentType(multipartFile.getContentType());
+                metadata.setContentLength(multipartFile.getSize());
+
+                amazonS3Client.putObject(new PutObjectRequest(bucket, newFileName, inputStream, metadata));
+
+                File file = File.builder()
+                        .fileName(originFileName)
+                        .newFileName(newFileName)
+                        .fileUrl(cloudFrontDomain + newFileName)
+                        .fileType(fileDTO.getFileType())
+                        .build();
+
+                return file;
+            } catch (IOException e) {
+                log.error(e.getMessage());
+                throw new CustomException(ErrorCode.AWS_S3_UPLOAD_FAIL);
+            }
+        } else {
+            throw new CustomException(ErrorCode.AWS_S3_UPLOAD_VALID);
         }
-
-        File file = File.builder()
-                .fileName(originFileName)
-                .newFileName(newFileName)
-                .fileUrl(amazonS3Client.getUrl(bucket, newFileName).toString())
-                .fileType(fileDTO.getFileType())
-                .build();
-
-        return file;
     }
 
     @Override
