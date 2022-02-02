@@ -1,11 +1,14 @@
 package com.blog.api.server.handler;
 
+import com.blog.api.server.common.ErrorCode;
 import com.blog.api.server.common.ResponseVO;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
+import java.nio.file.AccessDeniedException;
 
 @RestControllerAdvice
 public class ExceptionHandler {
@@ -22,4 +25,19 @@ public class ExceptionHandler {
                                 .build()
                 );
     }
+
+//    @org.springframework.web.bind.annotation.ExceptionHandler({AccessDeniedException.class})
+//    public ResponseEntity<ResponseVO> accessDenidedHandler(HttpServletRequest request) {
+//        ErrorCode e = ErrorCode.NOT_HAVE_PERMISSION;
+//
+//        return ResponseEntity
+//                .status(e.getStatus())
+//                .body(
+//                        ResponseVO.builder()
+//                                .status(e.getStatus())
+//                                .message(e.getMessage())
+//                                .code(e.getCode())
+//                                .build()
+//                );
+//    }
 }

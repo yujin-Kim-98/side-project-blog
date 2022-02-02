@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import Pagination from "rc-pagination";
 import { Link } from "react-router-dom";
 import { CardBody, CardImg, CardText, CardTitle } from "reactstrap";
+import  default_image  from "../assets/image/default_image.png";
 
 const Paging = (props) => {
     const { items, total, current, size, nextPage } = props;
@@ -14,7 +15,7 @@ const Paging = (props) => {
                     items.map((item) => 
                         <li className="section-item">
                             <Link to={`/post/${item.id}`}>
-                                <CardImg className="img-thumb"/>
+                                <CardImg className="img-thumb" src={item.thumbnailUrl ? item.thumbnailUrl : default_image}/>
                                 <CardBody className="wrap-content">
                                     <CardTitle 
                                         className="desc-title"
@@ -24,7 +25,7 @@ const Paging = (props) => {
                                     <CardText 
                                         className="desc-content"
                                     >
-                                        {item.content}
+                                        {/* <div dangerouslySetInnerHTML={{__html: item.content}}></div> */}
                                     </CardText>
                                 </CardBody>
                             </Link>

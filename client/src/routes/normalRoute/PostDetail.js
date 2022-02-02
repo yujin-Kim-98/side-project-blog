@@ -1,7 +1,10 @@
+import { put } from "@redux-saga/core/effects";
+import { push } from "connected-react-router";
 import React, {Fragment, useEffect} from "react";
 import {Card, CardBody, CardText, Button} from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { POST_DELETE_REQUEST, POST_GET_DETAIL_REQUEST } from "../../redux/types";
+import { Link } from "react-router-dom";
 
 const PostDetail = (req) => {
     const { id, title, content, creator, created } = useSelector((state) => state.post);
@@ -28,11 +31,15 @@ const PostDetail = (req) => {
     const masterRoleBtn = (
         <Fragment>
             <div className="detail-btn-area">
-                <Button
-                    outline
+                <Link
+                    to={`/editpost/${id}`}
                 >
-                    수정
-                </Button>
+                    <Button
+                        outline
+                    >
+                        수정
+                    </Button>
+                </Link>
 
                 <Button
                     outline
@@ -53,14 +60,8 @@ const PostDetail = (req) => {
                 </div>
                 <div>
                     <Card>
-                        {/* <img
-                            alt="Card image cap"
-                            src="https://picsum.photos/318/180"
-                            width="100%"
-                        /> */}
                         <CardBody>
                             <CardText>
-                                {/* <pre>{content}</pre> */}
                                 <div dangerouslySetInnerHTML={{__html: content}}></div>
                             </CardText>
                         </CardBody>

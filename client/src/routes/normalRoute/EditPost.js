@@ -1,27 +1,33 @@
-import React, { Fragment, useState } from "react";
-import { FormGroup, Form, Label, Col, Button } from "reactstrap";
+import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Button, Col, Form, FormGroup, Label } from "reactstrap";
 import { useForm } from "react-hook-form";
-import { POST_SAVE_REQUEST } from "../../redux/types";
 import PostEditor from "../../components/post/PostEditor";
-import ErrorModal from "../../components/ErrorModal";
+import { POST_EDIT_REQUEST, POST_GET_DETAIL_REQUEST } from "../../redux/types";
 
-const NewPost = () => {
+const EditPost = (req) => {
     const dispatch = useDispatch();
 
-    const { isModal, errorMsg } = useSelector((state) => state.post);
+    const { id, title, content } = useSelector((state) => state.post);
 
-    const [ content, setContent ] = useState("");
+    const [ editContent, setEditContent ] = useState("");
 
     const { register, handleSubmit, formState: { errors } } = useForm();
+
+    useEffect(() => {
+        dispatch({
+            type: POST_GET_DETAIL_REQUEST,
+            payload: req.match.params.id,
+        })
+    }, [dispatch]);
 
     const onSubmit = (data) => {
         const { title } = data;
 
-        const post = { title, content };
+        const post = { id, title, 'content': editContent };
 
         dispatch({
-            type: POST_SAVE_REQUEST,
+            type: POST_EDIT_REQUEST,
             payload: post,
         });
     };
@@ -30,7 +36,7 @@ const NewPost = () => {
         <Fragment>
             <section className="about">
                 <div className="title en">
-                    <p>New Post</p>
+                    <p>Edit Post</p>
                 </div>
                 <Form
                     onSubmit={handleSubmit(onSubmit)}
@@ -45,16 +51,18 @@ const NewPost = () => {
                         <Col sm={10}>
                             <input
                                 className="form-control"
+                                defaultValue={title}
                                 {...register("title", {
                                     required: true,
-                                    message: "제목을 입력해주세요",
+                                    message: "제목을 입력해주세요"
                                 })}
                             />
                         </Col>
                     </FormGroup>
                     <FormGroup>
-                        <PostEditor 
-                            setContent={setContent}
+                        <PostEditor
+                            content={content}
+                            setContent={setEditContent}
                         />
                     </FormGroup>
 
@@ -63,7 +71,7 @@ const NewPost = () => {
                         outline
                         className="btn-right"
                     >
-                        작성
+                        수정
                     </Button>
                 </Form>
             </section>
@@ -71,4 +79,4 @@ const NewPost = () => {
     )
 };
 
-export default NewPost;
+export default EditPost;

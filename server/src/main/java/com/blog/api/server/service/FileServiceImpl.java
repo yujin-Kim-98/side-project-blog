@@ -59,10 +59,7 @@ public class FileServiceImpl implements FileService {
                 amazonS3Client.putObject(new PutObjectRequest(bucket, newFileName, inputStream, metadata));
 
                 File file = File.builder()
-                        .fileName(originFileName)
-                        .newFileName(newFileName)
                         .fileUrl(cloudFrontDomain + newFileName)
-                        .fileType(fileDTO.getFileType())
                         .build();
 
                 return file;
@@ -76,7 +73,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void deleteFile(String newFileName) {
-        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, newFileName));
+    public void deleteFile(String fileName) {
+        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
     }
 }

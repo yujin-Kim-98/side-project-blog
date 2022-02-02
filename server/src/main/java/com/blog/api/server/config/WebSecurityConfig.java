@@ -1,13 +1,11 @@
 package com.blog.api.server.config;
 
+import com.blog.api.server.common.Role;
+import com.blog.api.server.handler.CustomAccessDeniedHandler;
 import com.blog.api.server.service.UserService;
-import com.blog.api.server.utils.HTMLCharacterEscapes;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,11 +16,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import java.util.List;
 
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -32,6 +25,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private TokenProvider tokenProvider;
+
+    @Autowired
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
     @Override
@@ -59,7 +55,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반이므로 세션 사용 안함
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .authorizeRequests()
+
+
+                    .antMatchers(HttpMethod.POST, "/api/post", "/api/file/s3-upload").hasAuthority(Role.MASTER.getRole())
+                    .antMatchers(HttpMethod.PUT, "/api/post/{id}").hasAuthority(Role.MASTER.getRole())
+                    .antMatchers(HttpMethod.DELETE, "/api/post/{id}").hasAuthority(Role.MASTER.getRole())
+                    .anyRequest().permitAll();
+
+        http.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler);
+//                    .antMatchers(HttpMethod.POST, "/api/post").hasRole(Role.MASTER.getRole());
+
+
         // JwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 전에 넣음
     }
 }

@@ -8,6 +8,7 @@ import Login from "./normalRoute/Login";
 import Signup from "./normalRoute/Signup";
 import NewPost from "./normalRoute/NewPost";
 import PostDetail from "./normalRoute/PostDetail";
+import EditPost from "./normalRoute/EditPost";
 
 const MyRouter = () => {
     return (
@@ -23,6 +24,7 @@ const MyRouter = () => {
                             <Route exact path="/signup" component={Signup} />
                             <Route exact path="/newpost" component={NewPost} />
                             <Route exact path="/post/:id" component={PostDetail} />
+                            <Route exact path="/editpost/:id" component={EditPost} />
                         </Switch>
                     </Container>
                     {/* 푸터 */}

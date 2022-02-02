@@ -5,11 +5,15 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,14 +31,21 @@ public class Member implements UserDetails {
     @ApiModelProperty(required = true, value = "패스워드")
     private String password;
 
-    @ApiModelProperty(required = false, value = "권한(Master, Sub)")
+    @ApiModelProperty(required = true, value = "권한(Master, Sub)")
     private String role;
 
+    @Transient
+    @ApiModelProperty(required = true, value = "권한 (Security Context)")
+    private Collection<GrantedAuthority> authorities;
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        authorities.add(new SimpleGrantedAuthority(this.role));
+
+        return authorities;
     }
 
     @Override

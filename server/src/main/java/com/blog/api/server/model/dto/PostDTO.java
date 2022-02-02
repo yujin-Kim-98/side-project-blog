@@ -15,6 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 public class PostDTO {
 
+    @ApiModelProperty(value = "POST ID")
+    private String id;
+
     @ApiModelProperty(value = "POST TITLE")
     private String title;
 

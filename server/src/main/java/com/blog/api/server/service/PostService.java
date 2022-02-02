@@ -13,4 +13,6 @@ public interface PostService {
     Post getPost(String id);
 
     void deletePost(String id);
+
+    void editPost(PostDTO postDTO, Member member);
 }

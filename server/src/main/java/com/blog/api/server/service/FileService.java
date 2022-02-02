@@ -10,5 +10,5 @@ import java.util.List;
 public interface FileService {
     File s3Upload(FileDTO fileDTO, Member member);
 
-    void deleteFile(String newFileName);
+    void deleteFile(String fileName);
 }

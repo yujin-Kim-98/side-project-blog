@@ -5,11 +5,11 @@ import com.blog.api.server.common.Role;
 import com.blog.api.server.common.TimeZone;
 import com.blog.api.server.config.TokenProvider;
 import com.blog.api.server.handler.CustomException;
-import com.blog.api.server.model.File;
 import com.blog.api.server.model.Member;
 import com.blog.api.server.model.Post;
 import com.blog.api.server.model.dto.PostDTO;
 import com.blog.api.server.repository.PostRepository;
+import com.blog.api.server.utils.FileUtil;
 import com.blog.api.server.utils.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -51,7 +50,8 @@ public class PostServiceImpl implements PostService {
                 .content(postDTO.getContent())
                 .creator(member.getEmail())
                 .created(TimeUtil.getLocalDateTime(TimeZone.ASIA_SEOUL.getZone()))
-                .fileList(postDTO.getAddFile())
+                .thumbnailUrl(FileUtil.getThumbnailUrl(postDTO.getContent()))
+                .fileList(FileUtil.getFileList(postDTO.getContent()))
                 .build();
 
         postRepository.insert(post);
@@ -92,17 +92,25 @@ public class PostServiceImpl implements PostService {
 
         postRepository.deleteById(id);
 
-        List<File> fileList = post.get().getFileList();
+        post.get().getFileList().forEach(
+                file -> {
+                    fileService.deleteFile(file.getFileName());
+                }
+        );
+    }
 
-        System.out.println("empty : " + fileList.isEmpty());
+    @Override
+    public void editPost(PostDTO postDTO, Member member) {
+        Post post = Post.builder()
+                .id(postDTO.getId())
+                .title(postDTO.getTitle())
+                .content(postDTO.getContent())
+                .thumbnailUrl(FileUtil.getThumbnailUrl(postDTO.getContent()))
+                .updator(member.getEmail())
+                .updated(TimeUtil.getLocalDateTime(TimeZone.ASIA_SEOUL.getZone()))
+                .fileList(FileUtil.getFileList(postDTO.getContent()))
+                .build();
 
-        if(!fileList.isEmpty()) {
-            log.info("파일 존재");
-            fileList.forEach(
-                    file -> {
-                        fileService.deleteFile(file.getNewFileName());
-                    }
-            );
-        }
+        postRepository.save(post);
     }
 }

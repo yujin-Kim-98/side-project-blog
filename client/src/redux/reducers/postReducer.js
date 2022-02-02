@@ -1,4 +1,4 @@
-import { POST_SAVE_FAILURE, POST_SAVE_REQUEST, POST_SAVE_SUCCESS, POST_GET_ALL_REQUEST, POST_GET_ALL_SUCCESS, POST_GET_ALL_FAILURE, POST_GET_DETAIL_REQUEST, POST_GET_DETAIL_SUCCESS, POST_GET_DETAIL_FAILURE, POST_DELETE_REQUEST, POST_DELETE_SUCCESS, POST_DELETE_FAILURE, S3_UPLOAD_REQUEST, S3_UPLOAD_SUCCESS, S3_UPLOAD_FAILURE } from "../types";
+import { POST_SAVE_FAILURE, POST_SAVE_REQUEST, POST_SAVE_SUCCESS, POST_GET_ALL_REQUEST, POST_GET_ALL_SUCCESS, POST_GET_ALL_FAILURE, POST_GET_DETAIL_REQUEST, POST_GET_DETAIL_SUCCESS, POST_GET_DETAIL_FAILURE, POST_DELETE_REQUEST, POST_DELETE_SUCCESS, POST_DELETE_FAILURE, S3_UPLOAD_REQUEST, S3_UPLOAD_SUCCESS, S3_UPLOAD_FAILURE, POST_EDIT_REQUEST, POST_EDIT_SUCCESS, POST_EDIT_FAILURE } from "../types";
 
 const initialState = {
     id: "",
@@ -6,6 +6,7 @@ const initialState = {
     content: "",
     creator: "",
     created: null,
+    thumbnailUrl: "",
     isModal: false,
     errorMsg: "",
     items: [],
@@ -13,11 +14,11 @@ const initialState = {
     count: 0,
     size: 0,
     files: null,
-
-
-    // test
-    addFile: [],
 };
+
+const postErrorCode = [
+    { code: "ROLE-0001", message: "권한이 없습니다" },
+];
 
 const postReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -88,6 +89,20 @@ const postReducer = (state = initialState, action) => {
                 ...state,
             }
 
+        // POST EDIT
+        case POST_EDIT_REQUEST:
+            return {
+                ...state,
+            };
+        case POST_EDIT_SUCCESS:
+            return {
+                ...state,
+            };
+        case POST_EDIT_FAILURE:
+            return {
+                ...state,
+            };
+
         // FILE UPLOAD
         case S3_UPLOAD_REQUEST:
             return {
@@ -101,7 +116,7 @@ const postReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isModal: true,
-                errorMsg: '에러 처리 필요',
+                errorMsg: postErrorCode.find(error => error.code === action.payload.data.code).message,
             };
 
 

@@ -5,6 +5,7 @@ import com.blog.api.server.model.Member;
 import com.blog.api.server.model.Post;
 import com.blog.api.server.model.dto.PostDTO;
 import com.blog.api.server.service.PostService;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,19 @@ public class PostController {
                 .body(ResponseVO.builder()
                         .status(HttpStatus.OK)
                         .response(null)
+                        .build());
+    }
+
+    @ApiModelProperty(value = "PUT", notes = "게시글 수정")
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseVO> editPost(@PathVariable String id, @RequestBody PostDTO postDTO, @AuthenticationPrincipal Member member) {
+        postService.editPost(postDTO, member);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ResponseVO.builder()
+                        .status(HttpStatus.OK)
+                        .response(id)
                         .build());
     }
 }

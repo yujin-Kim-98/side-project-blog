@@ -6,9 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -16,36 +13,19 @@ import java.time.LocalDateTime;
 @ApiModel(description = "첨부파일")
 public class File {
 
-    @ApiModelProperty(required = true, value = "File NAME")
+    @ApiModelProperty(required = true, value = "파일 이름")
     private String fileName;
 
-    @ApiModelProperty(required = true, value = "File Name (AWS)")
-    private String newFileName;
-
-    @ApiModelProperty(required = true, value = "File URL")
+    @ApiModelProperty(required = true, value = "파일 URL")
     private String fileUrl;
 
-    @ApiModelProperty(required = true, value = "POST ID")
-    private String parentId;
-
-    @ApiModelProperty(required = true, value = "FILE TYPE (EX : EDITOR, ATTACHMENT)")
-    private String fileType;
-
-    @ApiModelProperty(required = true, value = "FILE SORT NUMBER")
-    private int sortNum;
-
-    @ApiModelProperty(required = false, value = "CREATED")
-    private LocalDateTime created;
-
+    @ApiModelProperty(required = true, value = "파일 순번")
+    private int sort;
 
     @Builder
-    public File(String fileName, String newFileName, String fileUrl, String parentId, String fileType, int sortNum, LocalDateTime created) {
+    public File(String fileName, String fileUrl, int sort) {
         this.fileName = fileName;
-        this.newFileName = newFileName;
         this.fileUrl = fileUrl;
-        this.parentId = parentId;
-        this.fileType = fileType;
-        this.sortNum = sortNum;
-        this.created = created;
+        this.sort = sort;
     }
 }

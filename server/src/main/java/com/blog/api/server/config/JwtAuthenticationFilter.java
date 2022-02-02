@@ -46,7 +46,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             System.out.println(isTokenValid + "isTokenValid");
 
             if(accessToken != null && tokenProvider.validateToken(accessToken)) {
-                log.info("setAuthentication");
                 this.setAuthentication(accessToken);
             }
         } catch(ExpiredJwtException e) {
@@ -117,7 +116,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     // SecurityContext에 Authentication 저장
     private void setAuthentication(String token) {
-        log.info("setAuthentication");
         Authentication authentication = tokenProvider.getAuthentication(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }

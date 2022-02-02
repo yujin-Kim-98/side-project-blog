@@ -35,16 +35,28 @@ public class Post {
     @ApiModelProperty(required = true, value = "작성시간")
     private LocalDateTime created;
 
-//    @DBRef
+    @ApiModelProperty(required = false, value = "수정자")
+    private String updator;
+
+    @ApiModelProperty(required = false, value = "수정시간")
+    private LocalDateTime updated;
+
+    @ApiModelProperty(required = false, value = "썸네일 URL")
+    private String thumbnailUrl;
+
+    @ApiModelProperty(required = false, value = "파일 리스트")
     private List<File> fileList;
 
     @Builder
-    public Post(String id, String title, String content, String creator, LocalDateTime created, List<File> fileList) {
+    public Post(String id, String title, String content, String creator, LocalDateTime created, String updator, LocalDateTime updated, String thumbnailUrl, List<File> fileList) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.creator = creator;
         this.created = created;
+        this.updator = updator;
+        this.updated = updated;
+        this.thumbnailUrl = thumbnailUrl;
         this.fileList = fileList;
     }
 }
