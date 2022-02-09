@@ -11,22 +11,18 @@ import com.blog.api.server.repository.RedisRepository;
 import com.blog.api.server.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -43,45 +39,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-//        Optional<Member> member = userRepository.findById(email);
-//        Member member = userRepository.findById(email).get();
-
-//        member.setAuthorities(Arrays.asList(new SimpleGrantedAuthority(member.getRole())));
-//
-//        return member;
-
         Optional<Member> member = userRepository.findById(email);
         member.orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_MEMBER)
         );
-
         return member.get();
-
-
-//        return (UserDetails) userRepository.findById(email).orElseThrow(
-//                () -> new CustomException(ErrorCode.NOT_FOUND_MEMBER)
-//        );
     }
 
     @Override
     public MemberDTO signin(Member memberDTO, HttpServletResponse response) {
         Optional<Member> member = userRepository.findById(memberDTO.getEmail());
 
-        member.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+        member.orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_MEMBER)
+        );
 
         if(!passwordEncoder.matches(memberDTO.getPassword(), member.get().getPassword())) {
             throw new CustomException(ErrorCode.NOT_FOUND_MEMBER);
         }
 
-        // JWT ACCESS TOKEN, REFRESH TOKEN
         Token accessToken = tokenProvider.createAccessToken(member.get());
         Token refreshToken = tokenProvider.createRefreshToken(member.get());
 
         tokenProvider.setHeaderAccessToken(response, accessToken.getValue());
-        tokenProvider.setHeaderRefreshToken(response, refreshToken.getValue());
 
         redisRepository.save(refreshToken);
-//        REDIS GET VALUE BY KEY : HGETALL
 
         return MemberDTO.builder()
                 .accessToken(accessToken.getValue())

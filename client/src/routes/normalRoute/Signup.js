@@ -10,9 +10,6 @@ const Signup = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm();
 
-    const { isModal } = useSelector((state) => state.user);
-    const { errorMsg } = useSelector((state) => state.user);
-
     const onSubmit = (data) => {
         const {email, name, password} = data;
         const member = {email, name, password};
@@ -92,7 +89,7 @@ const Signup = () => {
                         회원가입
                     </Button>
                 </Form>
-                {isModal ? <ErrorModal isModal={isModal} errorMsg={errorMsg}></ErrorModal> : null}
+                <ErrorModal/>
             </section>
         </Fragment >
     )

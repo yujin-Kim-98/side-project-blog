@@ -10,12 +10,18 @@ public enum ErrorCode {
     // Post
     NOT_FOUND_POST(HttpStatus.BAD_REQUEST, "POST-0001", "Post not found"),
 
-    // File : AWS S3
-    AWS_S3_UPLOAD_FAIL(HttpStatus.BAD_REQUEST, "FILE-S3-0001", "AWS S3 File upload fail"),
-    AWS_S3_UPLOAD_VALID(HttpStatus.BAD_REQUEST, "FILE-S3-0002", "File validation"),
+    // File
+    AWS_S3_UPLOAD_FAIL(HttpStatus.BAD_REQUEST, "FILE-0001", "AWS S3 File upload fail"),
+    AWS_S3_UPLOAD_VALID(HttpStatus.BAD_REQUEST, "FILE-0002", "File validation"),
 
     // Role
-    NOT_HAVE_PERMISSION(HttpStatus.BAD_REQUEST, "ROLE-0001", "You do not have permission");
+    NOT_HAVE_PERMISSION(HttpStatus.BAD_REQUEST, "ROLE-0001", "You do not have permission"),
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "ROLE-0002", "Unauthorized"),
+    FORBIDDEN(HttpStatus.FORBIDDEN, "ROLE-0003", "Forbidden"),
+
+    //JWT
+    JWT_ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "TOKEN-0001", "Access token has expired"),
+    JWT_REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "TOKEN-0002", "Refresh token has expired");
 
 
     HttpStatus status;

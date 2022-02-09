@@ -2,6 +2,7 @@ package com.blog.api.server.config;
 
 import com.blog.api.server.common.Role;
 import com.blog.api.server.handler.CustomAccessDeniedHandler;
+import com.blog.api.server.handler.CustomAuthenticationEntryPoint;
 import com.blog.api.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,9 +26,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private TokenProvider tokenProvider;
-
-    @Autowired
-    private CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
     @Override
@@ -55,19 +53,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반이므로 세션 사용 안함
                 .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                .accessDeniedHandler(new CustomAccessDeniedHandler())
+                .and()
                 .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-
-
-                    .antMatchers(HttpMethod.POST, "/api/post", "/api/file/s3-upload").hasAuthority(Role.MASTER.getRole())
-                    .antMatchers(HttpMethod.PUT, "/api/post/{id}").hasAuthority(Role.MASTER.getRole())
-                    .antMatchers(HttpMethod.DELETE, "/api/post/{id}").hasAuthority(Role.MASTER.getRole())
-                    .anyRequest().permitAll();
-
-        http.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler);
-//                    .antMatchers(HttpMethod.POST, "/api/post").hasRole(Role.MASTER.getRole());
-
-
-        // JwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 전에 넣음
+                .antMatchers(HttpMethod.POST, "/api/post", "/api/file/s3-upload").hasAuthority(Role.MASTER.getRole())
+                .antMatchers(HttpMethod.PUT, "/api/post/{id}").hasAuthority(Role.MASTER.getRole())
+                .antMatchers(HttpMethod.DELETE, "/api/post/{id}").hasAuthority(Role.MASTER.getRole())
+                .anyRequest().permitAll();
     }
 }

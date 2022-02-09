@@ -1,38 +1,29 @@
+import { put } from "@redux-saga/core/effects";
+import { push } from "connected-react-router";
 import React, { Fragment, useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Modal, ModalBody, ModalFooter, Button } from "reactstrap";
 import { CLEAR_ERROR_REQUEST } from "../redux/types";
 
-const ErrorModal = (props) => {
-    const { isModal, errorMsg } = props;
+const ErrorModal = () => {
+    const dispatch = useDispatch()
 
-    const dispatch = useDispatch();
-
-    const [modal, setModal] = useState(false);
-    const [modalMsg, setModalMsg] = useState("");
-
-    useEffect(() => {
-        try {
-            setModal(isModal);
-            setModalMsg(errorMsg);
-        } catch(e) {
-            console.error(e);
-        }
-    });
+    const { isModal, errorMsg, directLink } = useSelector((state) => state.error)
 
     const handleToggle = () => {
         dispatch({
             type: CLEAR_ERROR_REQUEST,
-        });
-    };
+            payload: directLink,
+        })
+    }
 
     return (
         <Fragment>
             <Modal
-                isOpen={modal}
+                isOpen={isModal}
             >
                 <ModalBody>
-                    {modalMsg}
+                    {errorMsg}
                 </ModalBody>
                 <ModalFooter>
                     <Button
@@ -45,6 +36,6 @@ const ErrorModal = (props) => {
             </Modal>
         </Fragment>
     )
-};
+}
 
-export default ErrorModal;
+export default ErrorModal

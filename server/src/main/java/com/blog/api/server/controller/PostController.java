@@ -83,7 +83,7 @@ public class PostController {
     @ApiModelProperty(value = "PUT", notes = "게시글 수정")
     @PutMapping("/{id}")
     public ResponseEntity<ResponseVO> editPost(@PathVariable String id, @RequestBody PostDTO postDTO, @AuthenticationPrincipal Member member) {
-        postService.editPost(postDTO, member);
+        postService.updatePost(postDTO, member);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

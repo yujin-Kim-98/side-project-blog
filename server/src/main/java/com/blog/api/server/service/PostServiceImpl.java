@@ -100,17 +100,25 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void editPost(PostDTO postDTO, Member member) {
-        Post post = Post.builder()
+    public void updatePost(PostDTO postDTO, Member member) {
+        Optional<Post> post = postRepository.findById(postDTO.getId());
+
+        post.orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_POST)
+        );
+
+        Post updatePost = Post.builder()
                 .id(postDTO.getId())
                 .title(postDTO.getTitle())
                 .content(postDTO.getContent())
                 .thumbnailUrl(FileUtil.getThumbnailUrl(postDTO.getContent()))
+                .creator(post.get().getCreator())
+                .created(post.get().getCreated())
                 .updator(member.getEmail())
                 .updated(TimeUtil.getLocalDateTime(TimeZone.ASIA_SEOUL.getZone()))
                 .fileList(FileUtil.getFileList(postDTO.getContent()))
                 .build();
 
-        postRepository.save(post);
+        postRepository.save(updatePost);
     }
 }

@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { Editor } from '@tinymce/tinymce-react';
 import axios from "axios";
 import { S3_UPLOAD_FAILURE, S3_UPLOAD_SUCCESS } from "../../redux/types";
+import { ErrorCode } from "../../common/ErrorCode";
 
 const PostEditor = (props) => {
     const dispatch = useDispatch();
@@ -37,7 +38,7 @@ const PostEditor = (props) => {
             });
         })
         .catch(e => {
-            fail('업로드가 실패하였습니다');
+            fail(ErrorCode.find(error => error.code === e.response.data.code).message);
         });
     };
 

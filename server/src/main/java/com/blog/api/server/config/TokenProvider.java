@@ -1,38 +1,50 @@
 package com.blog.api.server.config;
 
+import com.blog.api.server.common.ErrorCode;
+import com.blog.api.server.common.ResponseVO;
 import com.blog.api.server.model.Member;
 import com.blog.api.server.model.Token;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.blog.api.server.repository.RedisRepository;
+import com.blog.api.server.utils.JwtUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.Date;
+import java.io.IOException;
+import java.security.Security;
+import java.time.Duration;
+import java.util.*;
 
+@Slf4j
 @Component
 public class TokenProvider {
 
     @Value("${jwt.security.key}")
     private String secretKey;
-    private long accessTokenValidTime = 1000L * 60 * 30; // 30 min
-    private long refreshTokenValidTime = 1000L * 60 * 1; // 60 min
+    @Value("${jwt.response.header}")
+    private String jwtHeader;
+    @Value("${jwt.token.prefix}")
+    private String jwtTokenPrefix;
+    private long accessTokenValidTime = Duration.ofMinutes(30).toMillis();
+    private long refreshTokenValidTime = Duration.ofDays(14).toMillis();
 
     @Autowired
-    UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private RedisRepository redisRepository;
 
     // secretKey를 Base64로 인코딩
     @PostConstruct
@@ -69,10 +81,8 @@ public class TokenProvider {
 
     // JWT 토큰에서 인증 정보 조회
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserEmail(token));
-
-        System.out.println(userDetails.getAuthorities());
-
+        HashMap<String, String> payloadMap = JwtUtil.getPayloadByToken(token);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(payloadMap.get("sub"));
         return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
     }
 
@@ -83,44 +93,33 @@ public class TokenProvider {
 
     // GET ACCESS TOKEN BY HEADER
     public String resolveAccessToken(HttpServletRequest request) {
-        if(request.getHeader("X-AUTH-TOKEN") != null) {
-            return request.getHeader("X-AUTH-TOKEN");
-        }
-        return null;
-    }
+        String bearerToken = request.getHeader(jwtHeader);
 
-    // GET REFRESH TOKEN BY HEADER
-    public String resolveRefreshToken(HttpServletRequest request) {
-        if(request.getHeader("REFRESH-TOKEN") != null) {
-            return request.getHeader("REFRESH-TOKEN");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(jwtTokenPrefix)) {
+            return bearerToken.substring(7);
         }
         return null;
     }
 
     // 토큰의 유효성 + 만료일자 확인
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token, HttpServletRequest request) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
-//            return !claims.getBody().getExpiration().before(new Date());
-        } catch (Exception e) {
-            System.out.println("validate token error : " + e.getMessage());
+        } catch(SecurityException | MalformedJwtException e) {
+            log.error("Invalid JWT signature");
+            return false;
+        } catch(UnsupportedJwtException e) {
+            log.error("Unsupported JWT token");
+            return false;
+        } catch(IllegalArgumentException e) {
+            log.error("JWT token is invalid");
             return false;
         }
     }
 
     // ACCESS TOKEN SET HEADER
     public void setHeaderAccessToken(HttpServletResponse response, String accessToken) {
-        response.setHeader("X-AUTH-TOKEN", accessToken);
-    }
-
-    // REFRESH TOKEN SET HEADER
-    public void setHeaderRefreshToken(HttpServletResponse response, String refreshToken) {
-        response.setHeader("REFRESH-TOKEN", refreshToken);
-    }
-
-    // TODO : REDIS 연동
-    public boolean existRefreshToken(String refreshToken) {
-        return false;
+        response.setHeader(jwtHeader, accessToken);
     }
 }

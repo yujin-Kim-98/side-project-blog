@@ -8,6 +8,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.ws.Response;
 import java.nio.file.AccessDeniedException;
 
 @RestControllerAdvice
@@ -25,19 +26,4 @@ public class ExceptionHandler {
                                 .build()
                 );
     }
-
-//    @org.springframework.web.bind.annotation.ExceptionHandler({AccessDeniedException.class})
-//    public ResponseEntity<ResponseVO> accessDenidedHandler(HttpServletRequest request) {
-//        ErrorCode e = ErrorCode.NOT_HAVE_PERMISSION;
-//
-//        return ResponseEntity
-//                .status(e.getStatus())
-//                .body(
-//                        ResponseVO.builder()
-//                                .status(e.getStatus())
-//                                .message(e.getMessage())
-//                                .code(e.getCode())
-//                                .build()
-//                );
-//    }
 }

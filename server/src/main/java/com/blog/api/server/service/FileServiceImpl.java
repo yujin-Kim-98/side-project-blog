@@ -11,6 +11,7 @@ import com.blog.api.server.model.File;
 import com.blog.api.server.model.Member;
 import com.blog.api.server.model.dto.FileDTO;
 import com.blog.api.server.repository.FileRepository;
+import com.blog.api.server.utils.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +38,8 @@ public class FileServiceImpl implements FileService {
     @Value("${cloud.aws.cloudfront.domain}")
     private String cloudFrontDomain;
 
+    @Value("${editor.file.upload.mimetype.white}")
+    private String imgWhite;
 
 
     @Override
@@ -44,14 +47,18 @@ public class FileServiceImpl implements FileService {
         MultipartFile multipartFile = fileDTO.getFile();
 
         if(!multipartFile.isEmpty()) {
-            if(member == null || !member.getRole().equalsIgnoreCase(Role.MASTER.getRole())) {
-                throw new CustomException(ErrorCode.NOT_HAVE_PERMISSION);
-            }
-
-            String originFileName = multipartFile.getOriginalFilename();
-            String newFileName = UUID.randomUUID() + "_" + originFileName;
 
             try(InputStream inputStream = multipartFile.getInputStream()) {
+                boolean isValid = FileUtil.editorFileValid(multipartFile, imgWhite);
+
+                if(!isValid) {
+                    throw new CustomException(ErrorCode.AWS_S3_UPLOAD_VALID);
+                }
+
+                String originFileName = multipartFile.getOriginalFilename();
+                String newFileName = UUID.randomUUID() + "_" + originFileName;
+
+
                 ObjectMetadata metadata = new ObjectMetadata();
                 metadata.setContentType(multipartFile.getContentType());
                 metadata.setContentLength(multipartFile.getSize());

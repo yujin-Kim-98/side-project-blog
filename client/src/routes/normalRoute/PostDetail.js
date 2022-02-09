@@ -1,10 +1,11 @@
 import { put } from "@redux-saga/core/effects";
 import { push } from "connected-react-router";
 import React, {Fragment, useEffect} from "react";
-import {Card, CardBody, CardText, Button} from "reactstrap";
+import {Card, CardBody, CardText, Button, CardFooter, CardHeader} from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { POST_DELETE_REQUEST, POST_GET_DETAIL_REQUEST } from "../../redux/types";
 import { Link } from "react-router-dom";
+import ErrorModal from "../../components/ErrorModal";
 
 const PostDetail = (req) => {
     const { id, title, content, creator, created } = useSelector((state) => state.post);
@@ -68,6 +69,7 @@ const PostDetail = (req) => {
                     </Card>
                 { role === 'MASTER' && masterRoleBtn }
                 </div>
+                <ErrorModal/>
             </section>
         </Fragment>
     )

@@ -1,4 +1,4 @@
-import { CLEAR_ERROR_FAILURE, CLEAR_ERROR_REQUEST, CLEAR_ERROR_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS, SIGNUP_FAILURE, SIGNUP_REQUEST, SIGNUP_SUCCESS, USER_LOADING_FAILURE, USER_LOADING_REQUEST, USER_LOADING_SUCCESS } from "../types";
+import { CLEAR_ERROR_FAILURE, CLEAR_ERROR_REQUEST, CLEAR_ERROR_SUCCESS, JWT_REISSUE_REQUEST, JWT_REISSUE_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS, SIGNUP_FAILURE, SIGNUP_REQUEST, SIGNUP_SUCCESS, USER_LOADING_FAILURE, USER_LOADING_REQUEST, USER_LOADING_SUCCESS } from "../types";
 
 const initialState = {
     token: localStorage.getItem('token'),
@@ -6,9 +6,6 @@ const initialState = {
     email: "",
     name: "",
     role: "",
-    errorMsg: "",
-    successMsg: "",
-    isModal: false,
     isLoading: false,
 };
 
@@ -33,15 +30,11 @@ const userReducer = (state = initialState, action) => {
                 email: action.payload.member.email,
                 name: action.payload.member.name,
                 role: action.payload.member.role,
-                isModal: false,
-                errorMsg: "",
             };
         case LOGIN_FAILURE:
             return {
                 ...state,
                 ...action.payload,
-                isModal: true,
-                errorMsg: userErrorCode.find(error => error.code === action.payload.data.code).message,
             };
 
 
@@ -57,14 +50,10 @@ const userReducer = (state = initialState, action) => {
                 email: "",
                 name: "",
                 role: "",
-                isModal: false,
-                errorMsg: "",
             };
         case LOGOUT_FAILURE:
             return {
                 ...state,
-                isModal: true,
-                errorMsg: "로그아웃이 실패했습니다",
             };
 
 
@@ -80,8 +69,6 @@ const userReducer = (state = initialState, action) => {
             return {
                 ...state,
                 ...action.payload,
-                isModal: true,
-                errorMsg: userErrorCode.find(error => error.code === action.payload.data.code).message,
             };
 
         case USER_LOADING_REQUEST:
@@ -97,8 +84,6 @@ const userReducer = (state = initialState, action) => {
                 email: action.payload.email,
                 name: action.payload.name,
                 role: action.payload.role,
-                isModal: false,
-                errorMsg: "",
             };
         case USER_LOADING_FAILURE:
             return {
@@ -110,22 +95,16 @@ const userReducer = (state = initialState, action) => {
                 isLoading: false,
             };
 
-        case CLEAR_ERROR_REQUEST:
+        case JWT_REISSUE_REQUEST:
             return {
                 ...state,
-            };
-        case CLEAR_ERROR_SUCCESS:
+            }
+        case JWT_REISSUE_SUCCESS:
+            localStorage.setItem('token', action.payload.accessToken)
             return {
                 ...state,
-                errorMsg: "",
-                isModal: false,
-            };
-        case CLEAR_ERROR_FAILURE:
-            return {
-                ...state,
-                errorMsg: "Clear Error",
-                isModal: true,
-            };
+            }
+
         default:
             return state;
     }

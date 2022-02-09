@@ -14,5 +14,5 @@ public interface PostService {
 
     void deletePost(String id);
 
-    void editPost(PostDTO postDTO, Member member);
+    void updatePost(PostDTO postDTO, Member member);
 }

@@ -4,6 +4,7 @@ import { Button, Col, Form, FormGroup, Label } from "reactstrap";
 import { useForm } from "react-hook-form";
 import PostEditor from "../../components/post/PostEditor";
 import { POST_EDIT_REQUEST, POST_GET_DETAIL_REQUEST } from "../../redux/types";
+import ErrorModal from "../../components/ErrorModal";
 
 const EditPost = (req) => {
     const dispatch = useDispatch();
@@ -74,6 +75,7 @@ const EditPost = (req) => {
                         수정
                     </Button>
                 </Form>
+                <ErrorModal/>
             </section>
         </Fragment>
     )

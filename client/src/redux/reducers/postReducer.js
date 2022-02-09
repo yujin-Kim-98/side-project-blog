@@ -7,18 +7,12 @@ const initialState = {
     creator: "",
     created: null,
     thumbnailUrl: "",
-    isModal: false,
-    errorMsg: "",
     items: [],
     page: 0,
     count: 0,
     size: 0,
     files: null,
 };
-
-const postErrorCode = [
-    { code: "ROLE-0001", message: "권한이 없습니다" },
-];
 
 const postReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -48,14 +42,10 @@ const postReducer = (state = initialState, action) => {
             return {
                 ...state,
                 id: action.payload,
-                isModal: false,
-                errorMsg: "",
             };
         case POST_SAVE_FAILURE:
             return {
                 ...state,
-                isModal: true,
-                errorMsg: "",
             };
 
         case POST_GET_DETAIL_REQUEST:
@@ -115,8 +105,6 @@ const postReducer = (state = initialState, action) => {
         case S3_UPLOAD_FAILURE:
             return {
                 ...state,
-                isModal: true,
-                errorMsg: postErrorCode.find(error => error.code === action.payload.data.code).message,
             };
 
 

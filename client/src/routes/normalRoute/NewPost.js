@@ -9,7 +9,7 @@ import ErrorModal from "../../components/ErrorModal";
 const NewPost = () => {
     const dispatch = useDispatch();
 
-    const { isModal, errorMsg } = useSelector((state) => state.post);
+    // const { isModal, errorMsg } = useSelector((state) => state.error)
 
     const [ content, setContent ] = useState("");
 
@@ -66,6 +66,7 @@ const NewPost = () => {
                         작성
                     </Button>
                 </Form>
+                <ErrorModal/>
             </section>
         </Fragment>
     )
