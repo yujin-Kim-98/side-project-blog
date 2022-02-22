@@ -42,9 +42,3 @@ npm start
 ```
 
 </br>
-<h2>Acknowledgments</h2>
-프로젝트를 진행하며 기능들을 어떤 방식으로 구현하였는지, 구현을 하며 어떤 고민을 하였고 어떤 방식으로 해결했는지는 제 블로그를 통해 확인해주세요.
-
-https://dev-yujji.tistory.com/category/%EC%82%AC%EC%9D%B4%EB%93%9C%20%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8/%EB%B8%94%EB%A1%9C%EA%B7%B8%28Spring%20boot%20%2B%20React.js%20%2B%20MongoDB%29
-
-감사합니다😀😀
